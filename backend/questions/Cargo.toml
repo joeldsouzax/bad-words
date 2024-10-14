@@ -2,8 +2,8 @@
 name = "questions"
 edition = "2021"
 version = "0.1.0"
-author = ["<joeldsouzax@gmail.com>"]
+authors = ["<joeldsouzax@gmail.com>"]
 
 
 [dependencies]
-handle_errors = {path = "../handle-errors"}
+handle-errors = {path = "../handle-errors"}

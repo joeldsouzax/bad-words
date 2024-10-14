@@ -12,7 +12,7 @@
       };
     };
   };
-  outputs = { nixpkgs, utils, crane, fenix, ... }:
+  outputs = { self, nixpkgs, utils, crane, fenix, ... }:
     utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs { inherit system; };
@@ -23,7 +23,15 @@
           questions = backend.questions;
           workspace-clippy = backend.workspace-clippy;
         };
-        devShells.default =
-          mkShell { buildInputs = [ podman podman-compose dive ]; };
+
+        packages = {
+          questions = backend.questions;
+        } // lib.optionalAttrs (!stdenv.isDarwin) {
+          workspace-llvm-coverage = backend.workspace-llvm-coverage;
+        };
+        devShells.default = backend.backendShell {
+          checks = self.checks.${system};
+          packages = [ podman podman-compose dive ];
+        };
       });
 }

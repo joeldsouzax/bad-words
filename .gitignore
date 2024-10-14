@@ -1,0 +1,5 @@
+.direnv/
+
+result/
+backend/**/target
+**/target/**

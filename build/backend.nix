@@ -28,14 +28,18 @@ let
   fileSetForCrate = crate:
     lib.fileset.toSource {
       root = ../backend;
-      filset =
-        lib.fileset.unions [ ./Cargo.toml ./Cargo.lock ./handle-errors crate ];
+      fileset = lib.fileset.unions [
+        ../backend/Cargo.toml
+        ../backend/Cargo.lock
+        ../backend/handle-errors
+        crate
+      ];
     };
 
   questions = craneLib.buildPackage (individualCrateArgs // {
     pname = "questions";
     cargoExtraArgs = "-p questions";
-    src = fileSetForCrate ./questions;
+    src = fileSetForCrate ../backend/questions;
   });
 in {
   questions = questions;
@@ -46,4 +50,6 @@ in {
 
   workspace-llvm-coverage =
     craneLibLLvmTools.cargoLlvmCov (commonArgs // { inherit cargoArtifacts; });
+
+  backendShell = craneLib.devShell;
 }
