@@ -1,0 +1,16 @@
+---
+services:
+  postgres:
+    image: postgres:17.0
+    container_name: "questions-db"
+    ports:
+      - 5432:5432
+    restart: 'always'
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: sphynx
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+volumes:
+  postgres_data:
