@@ -6,32 +6,39 @@
     crane.url = "github:ipetkov/crane";
     fenix = {
       url = "github:nix-community/fenix";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        rust-annalyzer-src.follows = "";
-      };
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
-  outputs = { self, nixpkgs, utils, crane, fenix, ... }:
+  outputs = { nixpkgs, utils, crane, fenix, ... }:
     utils.lib.eachDefaultSystem (system:
       let
-        pkgs = import nixpkgs { inherit system; };
-        backend =
-          import ./build/backend.nix { inherit pkgs crane fenix system; };
-      in with pkgs; {
-        checks = {
-          questions = backend.questions;
-          workspace-clippy = backend.workspace-clippy;
+        # setup all important functions
+        pkgs = nixpkgs.legacyPackages.${system};
+        inherit (pkgs) lib;
+        # rust backend
+        craneLib = crane.mkLib pkgs;
+        src = craneLib.cleanCargoSource ./backend;
+
+        commonArgs = {
+          inherit src;
+          strictDeps = true;
+          nativeBuildInputs = lib.optionals pkgs.stdenv.isDarwin
+            (with pkgs.darwin.apple_sdk.frameworks; [
+              pkgs.libiconv
+              CoreFoundation
+              Security
+              SystemConfiguration
+            ]);
         };
 
-        packages = {
-          questions = backend.questions;
-        } // lib.optionalAttrs (!stdenv.isDarwin) {
-          workspace-llvm-coverage = backend.workspace-llvm-coverage;
+        craneLibLLvmTools =
+          craneLib.overrideToolchain (fenix.packages.${system}.complete);
+        cargoArtifacts = craneLib.buildDepsOnly commonArgs;
+
+        individualCrateArgs = commonArgs // {
+          inherit cargoArtifacts;
+          inherit (craneLib.crateNameFromCargoToml { inherit src; }) version;
+          doCheck = false;
         };
-        devShells.default = backend.backendShell {
-          checks = self.checks.${system};
-          packages = [ podman podman-compose dive ];
-        };
-      });
+      in { devShells.default = craneLib.devShell { }; });
 }
