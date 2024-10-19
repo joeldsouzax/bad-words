@@ -40,5 +40,33 @@
           inherit (craneLib.crateNameFromCargoToml { inherit src; }) version;
           doCheck = false;
         };
-      in { devShells.default = craneLib.devShell { }; });
+
+        fileSetForBackend = crate:
+          lib.fileset.toSource {
+            root = ./backend;
+            fileset = lib.fileset.unions [
+              ./backend/Cargo.toml
+              ./backend/Cargo.lock
+              ./backend/handle-errors
+              crate
+            ];
+          };
+        questions-backend = craneLib.buildPackage (individualCrateArgs // {
+          pname = "questions";
+          cargoExtraArgs = "-p questions";
+          src = fileSetForBackend ./backend/questions;
+        });
+        # TODO: add filters for sqlx migrations
+      in with pkgs; {
+        packages = {
+          inherit questions-backend;
+        } // lib.optionalAttrs (!stdenv.isDarwin) {
+          backend-llvm-coverage = craneLibLLvmTools.cargoLlvmCov
+            (commonArgs // { inherit cargoArtifacts; });
+        };
+
+        devShells.default = craneLib.devShell {
+          packages = [ podman podman-compose dive rust-analyzer-nightly ];
+        };
+      });
 }
