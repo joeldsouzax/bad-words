@@ -66,7 +66,8 @@
         };
 
         devShells.default = craneLib.devShell {
-          packages = [ podman podman-compose dive rust-analyzer-nightly ];
+          inputsFrom = [ questions-backend ];
+          packages = [ podman podman-compose dive rust-analyzer ];
         };
       });
 }

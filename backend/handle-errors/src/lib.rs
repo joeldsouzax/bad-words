@@ -1,5 +1,3 @@
 pub enum Error {
-    RangeError
+    RangeError,
 }
-
-impl std::fmt::Display for Error {}

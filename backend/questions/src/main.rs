@@ -1,5 +1,5 @@
 #![warn(clippy::all)]
 
 fn main() {
-    println!("Hello, world");
+    println!("Hello, World!");
 }
