@@ -1,0 +1,18 @@
+
+
+* questions
+**  healh check
+#+begin_src restclient
+GET http://localhost:3030/health
+#+end_src
+
+#+RESULTS:
+: #+BEGIN_SRC text
+: healthy
+: GET http://localhost:3030/health
+: HTTP/1.1 200 OK
+: content-type: text/plain; charset=utf-8
+: content-length: 7
+: date: Sun, 20 Oct 2024 11:08:48 GMT
+: Request duration: 0.043119s
+: #+END_SRC
