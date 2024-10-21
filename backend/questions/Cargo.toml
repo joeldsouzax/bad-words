@@ -13,4 +13,5 @@ sqlx = { version = "0.8.2", features = ["migrate", "postgres", "runtime-tokio-ru
 tokio = { version = "1.40.0", features = ["full"] }
 tracing = { version = "0.1.40", features = ["log"] }
 tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
+uuid = { version = "1.11.0", features = ["v4"] }
 warp = "0.3.7"

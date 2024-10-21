@@ -67,7 +67,10 @@
 
         devShells.default = craneLib.devShell {
           inputsFrom = [ questions-backend ];
-          packages = [ podman podman-compose dive rust-analyzer ];
+          packages =
+            [ podman podman-compose dive rust-analyzer cargo-watch sqlx-cli ];
+          ## ENV
+          DATABASE_URL = "postgresql://postgres:sphynx@0.0.0.0:5432/bad_words";
         };
       });
 }

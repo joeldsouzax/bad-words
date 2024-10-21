@@ -2,14 +2,14 @@
 services:
   postgres:
     image: postgres:17.0
-    container_name: "questions-db"
+    container_name: "bad_words_db"
     ports:
       - 5432:5432
     restart: 'always'
     environment:
-      POSTGRES_DB: postgres
+      POSTGRES_DB: bad_words
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: sphynx
+      POSTGRES_PASSWORD: sphynx ## keep it secure and secret
     volumes:
       - postgres_data:/var/lib/postgresql/data
 volumes:
