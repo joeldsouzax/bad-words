@@ -20,7 +20,7 @@ impl TryFrom<HashMap<String, String>> for Pagination {
     fn try_from(value: HashMap<String, String>) -> Result<Self, Self::Error> {
        
         if value.contains_key("offset") && value.contains_key("limit") {
-            event!(name: "pagination", tracing::Level::INFO, pagination = true);
+           
             let offset = value
                 .get("offset")
                 .ok_or(PaginationError::InvalidValue)?
