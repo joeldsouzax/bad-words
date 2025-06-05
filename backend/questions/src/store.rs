@@ -86,7 +86,7 @@ impl Store {
             .fetch_one(&self.connection)
             .await
             .map_err(|err| {
-                event!(name: "store", Level::ERROR, "{:?}", err);
+                
                 DatabaseError(err)
             })
     }
