@@ -18,11 +18,7 @@ impl TryFrom<HashMap<String, String>> for Pagination {
 
     #[instrument]
     fn try_from(value: HashMap<String, String>) -> Result<Self, Self::Error> {
-        event!(
-            name: "pagination",
-            tracing::Level::INFO,
-            "pagination from query params"
-        );
+       
         if value.contains_key("offset") && value.contains_key("limit") {
             event!(name: "pagination", tracing::Level::INFO, pagination = true);
             let offset = value
