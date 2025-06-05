@@ -33,7 +33,7 @@ impl TryFrom<HashMap<String, String>> for Pagination {
             };
             Ok(Pagination { offset, limit })
         } else {
-            event!(name:"pagination", tracing::Level::INFO, pagination = false);
+           
             Ok(Pagination::default())
         }
     }
