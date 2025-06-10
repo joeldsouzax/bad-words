@@ -19,7 +19,7 @@ impl Store {
             .connect(url)
             .await
             .map_err(|err| {
-                
+                event!();
                 DatabaseError(err)
             })?;
         Ok(Self { connection })
